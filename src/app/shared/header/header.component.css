@@ -1,0 +1,29 @@
+h1{
+    font-family: "kufam";
+    margin-top: 5px;
+}
+
+nav{
+    background-color: #FFD166;
+    height: 90px;
+}
+
+.titulo{
+    margin-left: 100px;
+    margin-top: 10px;
+}
+
+.buscar{
+    background-color: #D9D9D9;
+    border-radius: 30px;
+}
+.icon-search{
+    margin-top: 5px;
+   color: #4E4A4A;
+}
+
+
+@font-face {
+    font-family: "kufam" ;
+    src: url(../../../../public/assets/fonts/Kufam-Regular.ttf);
+}
