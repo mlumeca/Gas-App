@@ -1,0 +1,57 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        @for (gasolinera of listadoGasolineras; track gasolinera.id) {
+        <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+
+            <div class="card mb-5" style="width: 25rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{gasolinera.rotulo}}</h5>
+                    <p class="card-text">
+                        {{gasolinera.provincia}}, {{gasolinera.municipio}}, {{gasolinera.localidad}}
+                        , {{gasolinera.postalCode}}, {{gasolinera.direccion}}
+                    </p>
+                    <div class="d-flex gap-5 ms-5">
+                        <img width="100px" src="/assets/img/A.png" alt="precio gasoil A">
+                        @if (gasolinera.priceGasoleoA == "") {
+                        <p class="mt-4">--</p>
+                        }@else{
+                        <p class="mt-4 tamayoLetra">{{gasolinera.priceGasoleoA}}€</p>
+                        }
+                    </div>
+                    <div class="d-flex gap-5 ms-5">
+                        <img width="100px" src="/assets/img/B.png" alt="precio gasoil B">
+                        @if (gasolinera.priceGasoleoB == "") {
+                        <p class="mt-4">--</p>
+                        }@else{
+                        <p class="mt-4 tamayoLetra">{{gasolinera.priceGasoleoB}}€</p>
+                        }
+                    </div>
+                    <div class="d-flex gap-5 ms-5">
+                        <img width="100px" src="/assets/img/95.png" alt="precio gasolina 95">
+                        @if (gasolinera.price95 == "") {
+                        <p class="mt-4">--</p>
+                        }@else{
+                        <p class="mt-4 tamayoLetra">{{gasolinera.price95}}€</p>
+                        }
+                    </div>
+                    <div class="d-flex gap-5 ms-5">
+                        <img width="100px" src="/assets/img/98.png" alt="precio gasolina 98">
+                        @if (gasolinera.priceGasolina98 == "") {
+                        <p class="mt-4">--</p>
+                        }@else{
+                        <p class="mt-4 tamayoLetra">{{gasolinera.priceGasolina98}}€</p>
+                        }
+                    </div>
+                    <div class="d-flex gap-5 ms-5">
+                        <img width="100px" src="/assets/img/H.png" alt="precio hidrógeno">
+                        @if (gasolinera.priceHidrogeno == "") {
+                        <p class="mt-4">--</p>
+                        }@else{
+                        <p class="mt-4 tamayoLetra">{{gasolinera.priceHidrogeno}}€</p>
+                        }
+                    </div>
+                </div>
+                <a [href]="gasolinera | mapLink" target="_blank" class="btn btn-secondary">Ver en Google Maps</a>
+            </div>
+        </div>
+        }

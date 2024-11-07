@@ -1,0 +1,75 @@
+<div class="container-fluid mt-5">
+
+    <h1 class="text-center">Gasolineras</h1>
+
+    <div class="row mb-4 justify-content-between">
+        <div ngbDropdown class="col-12 col-md-3 d-flex">
+            <button type="button" class="btn filtro" style="width: 15rem;" id="dropdownFilter" ngbDropdownToggle>
+                Filtrar precio
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownFilter">
+                <form class="px-4 py-3">
+                    <div class="mb-3">
+                        <label for="exampleDropdownFormPassword1">Precio mínimo</label>
+                        <input type="number" [(ngModel)]="precioMinimo" name="precioMinimo"
+                            class="form-control tamayoInput" placeholder="Mínimo" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="exampleDropdownFormPassword1">Precio máximo</label>
+                        <input type="number" [(ngModel)]="precioMax" name="precioMax" class="form-control tamayoInput"
+                            placeholder="Máximo" />
+                    </div>
+                </form>
+
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btnBuscar" ngbDropdownItem
+                        (click)="aplicarFiltroPrecio()">Filtrar</button>
+                </div>
+            </div>
+        </div>
+
+        <div ngbDropdown class="col-12 col-md-3 d-flex">
+            <button type="button" class="btn filtro" style="width: 15rem;" id="dropdownFilter" ngbDropdownToggle>
+                Provincias
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownFilter">
+                <form class="px-4 py-3">
+                    @for (provincia of provincias; track provincias.indexOf(provincia)){
+                    <mat-checkbox [checked]="provinciasFiltrados.includes(provincia)"
+                        (change)="modificarLista(provincia)">
+                        {{ provincia }}
+                    </mat-checkbox>
+                    }
+                </form>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btnBuscar" (click)="filtrarProvinciaMultiple()">Filtrar</button>
+                </div>
+            </div>
+        </div>
+
+        <form class="col-12 col-md-3 d-flex">
+            <mat-form-field class="example-full-width">
+                <mat-label>Código postal</mat-label>
+                <input type="text" placeholder="Código postal" aria-label="Código postal" matInput
+                    [formControl]="myControl" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                    @for (option of filteredOptions; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+
+        <div class="col-12 col-md-3 d-flex">
+            <form class="form-inline d-flex diseyoInput">
+                <input class="form-control mr-sm-2 diseyoInput " type="search" placeholder="Código Postal"
+                    name="codigoPostal" [(ngModel)]="codigoPostal" aria-label="search">
+                <button class="btn" type="submit" (click)="aplicarCodigoPostal()">
+                    Buscar
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
