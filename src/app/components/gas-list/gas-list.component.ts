@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { PostalCodeService } from '../../services/postal-code.service';
-
+import { LocationService } from '../../services/location.service';
 
 @Component({
   selector: 'app-gas-list',
@@ -15,22 +15,22 @@ import { PostalCodeService } from '../../services/postal-code.service';
 export class GasListComponent implements OnInit {
   codigoPostal = '';
   provinciasFiltrados: string[] = [];
-  provincias: string[] = [
-    "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona",
-    "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad real", "Córdoba",
-    "Cuenca", "Gerona", "Granada", "Guadalajara", "Gipuzkoa", "Huelva", "Huesca", "Jaén",
-    "Coruña (a)", "Rioja (la)", "Palmas (las)", "León", "Lleida", "Lugo", "Madrid", "Málaga",
-    "Murcia", "Navarra", "Ourense", "Palencia", "Pontevedra", "Salamanca", "Segovia",
-    "Sevilla", "Soria", "Tarragona", "Santa Cruz de Tenerife", "Teruel", "Toledo", "Valencia",
-    "Valladolid", "Vizcaya", "Zamora", "Zaragoza"
-  ]
+  // provincias: string[] = [
+  //   "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Barcelona",
+  //   "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad real", "Córdoba",
+  //   "Cuenca", "Gerona", "Granada", "Guadalajara", "Gipuzkoa", "Huelva", "Huesca", "Jaén",
+  //   "Coruña (a)", "Rioja (la)", "Palmas (las)", "León", "Lleida", "Lugo", "Madrid", "Málaga",
+  //   "Murcia", "Navarra", "Ourense", "Palencia", "Pontevedra", "Salamanca", "Segovia",
+  //   "Sevilla", "Soria", "Tarragona", "Santa Cruz de Tenerife", "Teruel", "Toledo", "Valencia",
+  //   "Valladolid", "Vizcaya", "Zamora", "Zaragoza"
+  // ]
 
   listadoGasolineras: Gasolinera[] = [];
   listadoGasolinerasOriginal: Gasolinera[] = [];
   @Input() precioMinimo = 0;
   @Input() precioMax = 0;
 
-  constructor(private gasService: GasAppService, private postalCodeService: PostalCodeService) { }
+  constructor(private gasService: GasAppService, private postalCodeService: PostalCodeService, private locationService: LocationService) { }
 
   ngOnInit() {
     this.gasService.getGasList().subscribe((respuesta) => {
@@ -53,6 +53,10 @@ export class GasListComponent implements OnInit {
       startWith(''),
       map(value => this._filterPostalCodes(value))
     );
+
+    this.locationService.getComunidadesAutonomas().subscribe(data => {
+      this.comunidadesAutonomas = data;
+    });
   }
 
   private cleanProperties(arrayGasolineras: any) {
@@ -131,7 +135,7 @@ export class GasListComponent implements OnInit {
     gasolina95: true,
     gasolina98: true,
     hidrogeno: true
-};
+  };
 
   cargarGasolineras(): void {
     this.gasolinerasFiltradas = [...this.gasolineras];
@@ -174,4 +178,42 @@ export class GasListComponent implements OnInit {
     const selectedPostalCode = event.option.value;
     console.log('Código postal seleccionado:', selectedPostalCode);
   }
+
+  //CCAA Select + provincia
+  comunidadesAutonomas: any[] = [];
+  selectedComunidad: string | null = null;
+
+  provincias: any[] = [];
+  selectedProvincia: string | null = null;
+
+  onComunidadChange(event: any) {
+    this.selectedComunidad = event.value;
+    if (this.selectedComunidad) {
+      this.locationService.getProvincias(this.selectedComunidad).subscribe(data => {
+        this.provincias = data; // Ajusta según la estructura de respuesta
+      });
+    } else {
+      this.provincias = [];
+      this.selectedProvincia = null;
+    }
+    this.selectedProvincia = null; // Resetear provincia al cambiar comunidad
+    this.onFilterGasolineras();
+  }
+
+onFilterGasolineras() {
+  if (this.selectedProvincia) {
+    this.locationService.getGasolinerasPorProvincia(this.selectedProvincia).subscribe(data => {
+      this.gasolineras = data;
+    });
+  } else if (this.selectedComunidad) {
+    this.locationService.getGasolinerasPorComunidad(this.selectedComunidad).subscribe(data => {
+      this.gasolineras = data;
+    });
+  }
+}
+
+onProvinciaChange(event: any) {
+  this.selectedProvincia = event.value;
+  this.onFilterGasolineras();
+}
 }

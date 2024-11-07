@@ -5,7 +5,8 @@
 
         <div class="row mb-4 justify-content-between">
             <div ngbDropdown class="col-12 col-md-3 d-flex"> <!-- filtro precio -->
-                <button type="button" class="btn btn-secondary filtro" style="width: 15rem" id="dropdownFilter" ngbDropdownToggle>
+                <button type="button" class="btn btn-secondary filtro" style="width: 15rem" id="dropdownFilter"
+                    ngbDropdownToggle>
                     Filtrar precio
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownFilter">
@@ -63,7 +64,7 @@
                 </mat-form-field>
             </div>
 
-            <div class="col-12 col-md-3 d-flex">
+            <div class="col-12 col-md-3 d-flex"> <!-- filtro codigo postal NO autocomplete, con input -->
                 <form class="form-inline d-flex diseyoInput">
                     <input class="form-control mr-sm-2 diseyoInput " type="search" placeholder="Código Postal"
                         name="codigoPostal" [(ngModel)]="codigoPostal" aria-label="search">
@@ -73,6 +74,15 @@
                 </form>
             </div>
 
+            <div class="col-12 col-md-3 d-flex">
+                <mat-form-field> <!-- filtro comunidad autónoma -->
+                    <mat-select placeholder="Comunidad Autónoma" (selectionChange)="onComunidadChange($event)">
+                        <mat-option *ngFor="let comunidad of comunidadesAutonomas" [value]="comunidad.IDCCAA">
+                            {{ comunidad.CCAA }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </div>
     </div>
 
