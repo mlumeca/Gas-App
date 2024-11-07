@@ -1,6 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Gasolinera } from '../../models/gas-app.dto';
 import { GasAppService } from '../../services/gas-app.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { PostalCodeService } from '../../services/postal-code.service';
+
 
 @Component({
   selector: 'app-gas-list',
@@ -25,7 +30,7 @@ export class GasListComponent implements OnInit {
   @Input() precioMinimo = 0;
   @Input() precioMax = 0;
 
-  constructor(private gasService: GasAppService) { }
+  constructor(private gasService: GasAppService, private postalCodeService: PostalCodeService) { }
 
   ngOnInit() {
     this.gasService.getGasList().subscribe((respuesta) => {
@@ -40,6 +45,14 @@ export class GasListComponent implements OnInit {
         console.error('Error parsing JSON:', error);
       }
     });
+    this.postalCodeService.getPostalCodes().subscribe((data) => {
+      this.postalCodes = data.map(item => item.codigo_postal.toString());
+    });
+
+    this.filteredPostalCodes = this.postalCodeControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterPostalCodes(value))
+    );
   }
 
   private cleanProperties(arrayGasolineras: any) {
@@ -90,7 +103,7 @@ export class GasListComponent implements OnInit {
     });
   }
 
-
+  // CÓDIGO POSTAL NO AUTOCOMPLETE (INPUT)
   aplicarCodigoPostal() {
     if (this.codigoPostal == '') {
       this.listadoGasolineras = this.listadoGasolinerasOriginal;
@@ -109,6 +122,34 @@ export class GasListComponent implements OnInit {
     }
   }
 
+  // FILTRO POR TIPOS
+  gasolineras: any[] = []; // Lista original de gasolineras
+  gasolinerasFiltradas: any[] = []; // Lista filtrada de gasolineras
+  fuelFilter = {
+    gasoleoA: true,
+    gasoleoB: true,
+    gasolina95: true,
+    gasolina98: true,
+    hidrogeno: true
+};
+
+  cargarGasolineras(): void {
+    this.gasolinerasFiltradas = [...this.gasolineras];
+  }
+
+  aplicarFiltroTipo(): void {
+    this.listadoGasolineras = this.listadoGasolinerasOriginal.filter(gasolinera => {
+      return (
+        (this.fuelFilter.gasoleoA && parseFloat(gasolinera.priceGasoleoA) > 0) ||
+        (this.fuelFilter.gasoleoB && parseFloat(gasolinera.priceGasoleoB) > 0) ||
+        (this.fuelFilter.gasolina95 && parseFloat(gasolinera.price95) > 0) ||
+        (this.fuelFilter.gasolina98 && parseFloat(gasolinera.priceGasolina98) > 0) ||
+        (this.fuelFilter.hidrogeno && parseFloat(gasolinera.priceHidrogeno) > 0)
+      );
+    });
+  }
+
+  // FILTRO PROVINCIAS CHECKBOXES
   filtrarProvinciaMultiple() {
     if (this.provinciasFiltrados.length === 0) {
       this.listadoGasolineras = this.listadoGasolinerasOriginal;
@@ -117,7 +158,20 @@ export class GasListComponent implements OnInit {
         this.provinciasFiltrados.includes(gasolinera.provincia)
       );
     }
+  }
 
+  //Código postal autocomplete
+  postalCodeControl = new FormControl();
+  postalCodes: string[] = [];
+  filteredPostalCodes!: Observable<string[]>;
+
+  private _filterPostalCodes(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.postalCodes.filter(code => code.toLowerCase().includes(filterValue));
+  }
+
+  onPostalCodeSelected(event: any) {
+    const selectedPostalCode = event.option.value;
+    console.log('Código postal seleccionado:', selectedPostalCode);
   }
 }
-

@@ -5,7 +5,7 @@
 
         <div class="row mb-4 justify-content-between">
             <div ngbDropdown class="col-12 col-md-3 d-flex"> <!-- filtro precio -->
-                <button type="button" class="btn filtro" style="width: 15rem;" id="dropdownFilter" ngbDropdownToggle>
+                <button type="button" class="btn btn-secondary filtro" style="width: 15rem" id="dropdownFilter" ngbDropdownToggle>
                     Filtrar precio
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownFilter">
@@ -15,7 +15,6 @@
                             <input type="number" [(ngModel)]="precioMinimo" name="precioMinimo"
                                 class="form-control tamayoInput" placeholder="Mínimo" />
                         </div>
-
                         <div class="mb-3">
                             <label for="exampleDropdownFormPassword1">Precio máximo</label>
                             <input type="number" [(ngModel)]="precioMax" name="precioMax"
@@ -24,14 +23,16 @@
                     </form>
 
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btnBuscar" ngbDropdownItem
-                            (click)="aplicarFiltroPrecio()">Filtrar</button>
+                        <button type="button" class="btn btnBuscar" ngbDropdownItem (click)="aplicarFiltroPrecio()">
+                            Filtrar
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div ngbDropdown class="col-12 col-md-3 d-flex"> <!-- filtro provincias -->
-                <button type="button" class="btn filtro" style="width: 15rem;" id="dropdownFilter" ngbDropdownToggle>
+                <button type="button" class="btn btn-secondary filtro" style="width: 15rem;" id="dropdownFilter"
+                    ngbDropdownToggle>
                     Provincias
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownFilter">
@@ -48,6 +49,18 @@
                             (click)="filtrarProvinciaMultiple()">Filtrar</button>
                     </div>
                 </div>
+            </div>
+
+            <div class="col-12 col-md-3 d-flex"> <!-- filtro codigo postal autocomplete -->
+                <mat-form-field class="bs-secondary-color filtro">
+                    <input type="text" placeholder="Código Postal" matInput [formControl]="postalCodeControl"
+                        [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPostalCodeSelected($event)">
+                        <mat-option *ngFor="let code of filteredPostalCodes | async" [value]="code">
+                            {{ code }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
             </div>
 
             <div class="col-12 col-md-3 d-flex">
