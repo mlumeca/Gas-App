@@ -30,17 +30,21 @@ export class GasListComponent implements OnInit {
   @Input() precioMinimo = 0;
   @Input() precioMax = 0;
 
+
   constructor(private gasService: GasAppService, private postalCodeService: PostalCodeService, private locationService: LocationService) { }
 
   ngOnInit() {
+    console.log('listadoGasolineras1: ', this.listadoGasolineras);
     this.gasService.getGasList().subscribe((respuesta) => {
       const respuestaEnString = JSON.stringify(respuesta);
       let parsedData;
       try {
         parsedData = JSON.parse(respuestaEnString);
         let arrayGasolineras = parsedData['ListaEESSPrecio'];
+        console.log('arrayGasolineras: ', arrayGasolineras);
         this.listadoGasolineras = this.cleanProperties(arrayGasolineras);
         this.listadoGasolinerasOriginal = [...this.listadoGasolineras];
+        console.log('list: ', this.listadoGasolineras);
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
@@ -53,7 +57,6 @@ export class GasListComponent implements OnInit {
       startWith(''),
       map(value => this._filterPostalCodes(value))
     );
-
     this.locationService.getComunidadesAutonomas().subscribe(data => {
       this.comunidadesAutonomas = data;
     });
@@ -105,8 +108,10 @@ export class GasListComponent implements OnInit {
       ];
       return preciosCombustibles.some((precio) => precio >= min && precio <= max);
     });
+    console.log('listadoGasolineras3: ', this.listadoGasolineras);
   }
 
+  
   // CÓDIGO POSTAL NO AUTOCOMPLETE (INPUT)
   aplicarCodigoPostal() {
     if (this.codigoPostal == '') {
@@ -116,6 +121,7 @@ export class GasListComponent implements OnInit {
         gasolinera.postalCode === this.codigoPostal
       );
     }
+    console.log('listadoGasolineras4: ', this.listadoGasolineras);
   }
 
   modificarLista(provincia: string) {
@@ -151,6 +157,7 @@ export class GasListComponent implements OnInit {
         (this.fuelFilter.hidrogeno && parseFloat(gasolinera.priceHidrogeno) > 0)
       );
     });
+    console.log('listadoGasolineras5: ', this.listadoGasolineras);
   }
 
   // FILTRO PROVINCIAS CHECKBOXES
@@ -162,6 +169,7 @@ export class GasListComponent implements OnInit {
         this.provinciasFiltrados.includes(gasolinera.provincia)
       );
     }
+    console.log('listadoGasolineras6: ', this.listadoGasolineras);
   }
 
   //Código postal autocomplete

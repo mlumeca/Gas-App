@@ -1,4 +1,4 @@
-<div type="main">
+<main>
     <div class="container-fluid mt-5">
 
         <h1 class="text-center">Gasolineras</h1>
@@ -31,8 +31,27 @@
                 </div>
             </div>
 
+            <div ngbDropdown class="col-12 col-md-3 d-flex">
+                <button type="button" class="btn btn-secondary filtro" style="width: 15rem;" id="dropdownFuelFilter" ngbDropdownToggle>
+                    Filtrar tipo de carburante
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownFuelFilter">
+                    <mat-checkbox [(ngModel)]="fuelFilter.gasoleoA" (change)="aplicarFiltroTipo()">Gasóleo A</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="fuelFilter.gasoleoB" (change)="aplicarFiltroTipo()">Gasóleo B</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="fuelFilter.gasolina95" (change)="aplicarFiltroTipo()">Gasolina 95</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="fuelFilter.gasolina98" (change)="aplicarFiltroTipo()">Gasolina 98</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="fuelFilter.hidrogeno" (change)="aplicarFiltroTipo()">Hidrógeno</mat-checkbox>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btnBuscar" ngbDropdownItem (click)="aplicarFiltroTipo()">
+                            Filtrar
+                        </button>
+                    ngbDropdownToggle>
+                    </div>
+                </div>
+            </div>
+
             <div ngbDropdown class="col-12 col-md-3 d-flex"> <!-- filtro provincias -->
-                <button type="button" class="btn btn-secondary filtro" style="width: 15rem;" id="dropdownFilter"
+                <button type="button" class="btn btn-secondary filtro" style="width: 15rem;" id="dropdownProvinceFilter"
                     ngbDropdownToggle>
                     Provincias
                 </button>
@@ -88,9 +107,8 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            @for (gasolinera of listadoGasolineras; track gasolinera.id) {
+            @for (gasolinera of arrayGasolineras; track gasolinera.id) {
             <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-
                 <div class="card mb-5" style="width: 25rem;">
                     <div class="card-body">
                         <h5 class="card-title text-center">{{gasolinera.rotulo}}</h5>
@@ -145,4 +163,4 @@
             }
         </div>
     </div>
-</div>
+</main>
