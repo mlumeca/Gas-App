@@ -4,110 +4,115 @@
         <h1 class="text-center">Gasolineras</h1>
 
         <div class="row mb-4 justify-content-between">
-            <div ngbDropdown class="col-12 col-md-3 d-flex"> <!-- filtro precio -->
-                <button type="button" class="btn btn-secondary filtro" style="width: 15rem" id="dropdownFilter"
-                    ngbDropdownToggle>
-                    Filtrar precio
+            <p>
+                <button type="button" class="btn btn-outline-primary ms-2" (click)="isCollapsed = !isCollapsed"
+                    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+                    Filtros:
                 </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownFilter">
-                    <form class="px-4 py-3">
-                        <div class="mb-3">
-                            <label for="exampleDropdownFormPassword1">Precio mínimo</label>
-                            <input type="number" [(ngModel)]="precioMinimo" name="precioMinimo"
-                                class="form-control tamayoInput" placeholder="Mínimo" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleDropdownFormPassword1">Precio máximo</label>
-                            <input type="number" [(ngModel)]="precioMax" name="precioMax"
-                                class="form-control tamayoInput" placeholder="Máximo" />
-                        </div>
-                    </form>
+            </p>
+            <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="">
+                            <div class="row">
+                                <div class="col-6 d-flex"> <!-- filtro precio y tipo-->
+                                    <p>Precio y tipo</p>
+                                    <div class="mb-3">
+                                        <label for="exampleDropdownFormPassword1">Precio mínimo</label>
+                                        <input type="number" [(ngModel)]="precioMinimo" name="precioMinimo"
+                                            class="form-control tamayoInput" placeholder="Mínimo" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleDropdownFormPassword1">Precio máximo</label>
+                                        <input type="number" [(ngModel)]="precioMax" name="precioMax"
+                                            class="form-control tamayoInput" placeholder="Máximo" />
+                                    </div>
+                                    <mat-radio-group aria-labelledby="example-radio-group-label"
+                                        class="example-radio-group">
 
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btnBuscar" ngbDropdownItem (click)="aplicarFiltroPrecio()">
-                            Filtrar
-                        </button>
+                                        <mat-radio-button [(ngModel)]="fuelFilter.gasoleoB">Gasóleo
+                                            B</mat-radio-button>
+                                        <mat-radio-button [(ngModel)]="fuelFilter.gasoleoA">Gasóleo
+                                            A</mat-radio-button>
+                                        <mat-radio-button [(ngModel)]="fuelFilter.gasolina95">Gasolina
+                                            95</mat-radio-button>
+                                        <mat-radio-button [(ngModel)]="fuelFilter.gasolina98">Gasolina
+                                            98</mat-radio-button>
+                                        <mat-radio-button
+                                            [(ngModel)]="fuelFilter.hidrogeno">Hidrógeno</mat-radio-button>
+                                        <mat-radio-button>Todas</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+
+                                <div class="col-3 d-flex"> <!-- filtro provincias y comunidades autónomas-->
+                                    <!-- @for (provincia of provincias; track provincias.indexOf(provincia)){
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Number</mat-label>
+                                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                            [formControl]="provinciaControl" [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            @for (option of provincias | async; track provincias) {
+                                            <mat-option [value]="provincias">{{provincias}}</mat-option>
+                                            }
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                    } -->
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Comunidad Autónoma</mat-label>
+                                        <input type="text" placeholder="Comunidad Autónoma"
+                                            aria-label="Comunidad Autónoma" matInput [formControl]="comunidadControl"
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            @for (option of comunidadesAutonomas | async; track option) {
+                                            <mat-option [value]="option">{{option}}</mat-option>
+                                            }
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Provincia</mat-label>
+                                        <input type="text" placeholder="Provincia" aria-label="Provincia" matInput
+                                            [formControl]="provinciaControl" [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            @for (option of provincias | async; track option) {
+                                            <mat-option [value]="option">{{option}}</mat-option>
+                                            }
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-3 d-flex form-inline diseyoInput">
+                                    <!-- filtro codigo postal con input -->
+                                    <input class="form-control mr-sm-2 diseyoInput " type="search"
+                                        placeholder="Código Postal" name="codigoPostal" [(ngModel)]="codigoPostal"
+                                        aria-label="search">
+                                </div>
+
+                                <div class="col-2 d-flex">
+                                    <button type="button" class="btn btn-secondary btnBuscar text-center" ngbDropdownItem
+                                        (click)="aplicarFiltros()">
+                                        Filtrar
+                                    </button>
+                                </div>
+
+                                <div class="col-2 d-flex">
+                                    <button type="button" class="btn btn-secondary btnBuscar text-center" ngbDropdownItem
+                                        (click)="quitarFiltros()">
+                                        Quitar filtros
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-
-            <div ngbDropdown class="col-12 col-md-3 d-flex">
-                <button type="button" class="btn btn-secondary filtro" style="width: 15rem;" id="dropdownFuelFilter" ngbDropdownToggle>
-                    Filtrar tipo de carburante
-                </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownFuelFilter">
-                    <mat-checkbox [(ngModel)]="fuelFilter.gasoleoA" (change)="aplicarFiltroTipo()">Gasóleo A</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="fuelFilter.gasoleoB" (change)="aplicarFiltroTipo()">Gasóleo B</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="fuelFilter.gasolina95" (change)="aplicarFiltroTipo()">Gasolina 95</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="fuelFilter.gasolina98" (change)="aplicarFiltroTipo()">Gasolina 98</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="fuelFilter.hidrogeno" (change)="aplicarFiltroTipo()">Hidrógeno</mat-checkbox>
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btnBuscar" ngbDropdownItem (click)="aplicarFiltroTipo()">
-                            Filtrar
-                        </button>
-                    ngbDropdownToggle>
-                    </div>
-                </div>
-            </div>
-
-            <div ngbDropdown class="col-12 col-md-3 d-flex"> <!-- filtro provincias -->
-                <button type="button" class="btn btn-secondary filtro" style="width: 15rem;" id="dropdownProvinceFilter"
-                    ngbDropdownToggle>
-                    Provincias
-                </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownFilter">
-                    <form class="px-4 py-3">
-                        @for (provincia of provincias; track provincias.indexOf(provincia)){
-                        <mat-checkbox [checked]="provinciasFiltrados.includes(provincia)"
-                            (change)="modificarLista(provincia)">
-                            {{ provincia }}
-                        </mat-checkbox>
-                        }
-                    </form>
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btnBuscar"
-                            (click)="filtrarProvinciaMultiple()">Filtrar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-3 d-flex"> <!-- filtro codigo postal autocomplete -->
-                <mat-form-field class="bs-secondary-color filtro">
-                    <input type="text" placeholder="Código Postal" matInput [formControl]="postalCodeControl"
-                        [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPostalCodeSelected($event)">
-                        <mat-option *ngFor="let code of filteredPostalCodes | async" [value]="code">
-                            {{ code }}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </div>
-
-            <div class="col-12 col-md-3 d-flex"> <!-- filtro codigo postal NO autocomplete, con input -->
-                <form class="form-inline d-flex diseyoInput">
-                    <input class="form-control mr-sm-2 diseyoInput " type="search" placeholder="Código Postal"
-                        name="codigoPostal" [(ngModel)]="codigoPostal" aria-label="search">
-                    <button class="btn" type="submit" (click)="aplicarCodigoPostal()">
-                        Buscar
-                    </button>
-                </form>
-            </div>
-
-            <div class="col-12 col-md-3 d-flex">
-                <mat-form-field> <!-- filtro comunidad autónoma -->
-                    <mat-select placeholder="Comunidad Autónoma" (selectionChange)="onComunidadChange($event)">
-                        <mat-option *ngFor="let comunidad of comunidadesAutonomas" [value]="comunidad.IDCCAA">
-                            {{ comunidad.CCAA }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
             </div>
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid"> <!-- Card List -->
         <div class="row justify-content-center">
-            @for (gasolinera of arrayGasolineras; track gasolinera.id) {
+            @for (gasolinera of listadoGasolineras; track gasolinera.id) {
             <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
                 <div class="card mb-5" style="width: 25rem;">
                     <div class="card-body">
@@ -157,7 +162,7 @@
                             }
                         </div>
                     </div>
-                    <a [href]="gasolinera | mapLink" target="_blank" class="btn btn-secondary">Ver en Google Maps</a>
+                    <!-- <a [href]="gasolinera | mapLink" target="_blank" class="btn btn-secondary">Ver en Google Maps</a> -->
                 </div>
             </div>
             }
